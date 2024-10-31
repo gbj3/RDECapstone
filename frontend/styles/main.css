@@ -6,6 +6,7 @@ body {
     align-items: center;
     justify-content: space-between;
     background-color: #3A6591;
+    padding: 0 9vw;
 }
 
 .navbar img {
@@ -24,25 +25,58 @@ body {
 }
 
 .navbar a:hover {
-    background-color: #ddd;
+    background-color: white;
     color: black;
 }
 
 .links {
     background-color: transparent;
     border: none;
-    width:50%;
+    width:fit-content;
     font-size: 16px;
     color: white;
     font-family: 'Lato', 'Arial';
 }
 
-.links :focus, .links :active {
+.links :focus, .links :active, .links :hover {
     background-color: white;
-    color: rgb(255, 1, 1);
+}
+
+.links option {
+    color: black;
 }
 
 .hero img {
     width: 100% !important;
-    height: 65% !important;
+}
+
+table {
+    flex:auto;
+    flex-direction: column;
+    margin: auto;
+    width: 80%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    text-align: center;
+    border: 1px solid black;
+  }
+
+  th {
+    text-align: center;
+  }
+
+.barChartContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin-top: 5vw;
+}
+
+#chart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
