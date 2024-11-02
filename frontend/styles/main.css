@@ -67,7 +67,7 @@ table {
     text-align: center;
   }
 
-.barChartContainer {
+.container {
     display: flex;
     justify-content: center;
     align-items: center;
