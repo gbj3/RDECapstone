@@ -1,0 +1,98 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4; /* Light background for contrast */
+    margin: 0; /* Remove default margin */
+}
+nav {
+    background-color: #007BFF; /* Blue navigation bar */
+    display: flex;
+    justify-content: space-between; /* Space out logo and menu */
+    align-items: center; /* Center items vertically */
+    padding: 10px 20px; /* Add padding */
+    position: relative; /* Position relative for dropdown */
+}
+#logo {
+    height: 40px; /* Logo height */
+}
+.hamburger {
+    cursor: pointer; /* Change cursor to pointer */
+    position: relative;
+    width: 30px;
+    height: 20px;
+}
+.line {
+    background-color: white; /* Hamburger line color */
+    height: 4px;
+    width: 100%;
+    position: absolute;
+    transition: all 0.3s ease;
+}
+.line:nth-child(1) { top: 0; } /* Top line */
+.line:nth-child(2) { top: 8px; } /* Middle line */
+.line:nth-child(3) { top: 16px; } /* Bottom line */
+
+/* Dropdown menu styles */
+.dropdown {
+    display: none; /* Initially hidden */
+    position: absolute; /* Position relative to nav */
+    top: 50px; /* Position below the nav */
+    right: 20px; /* Align with right edge */
+    background-color: #007BFF; /* Match the nav color */
+    border-radius: 5px; /* Rounded corners */
+    z-index: 1000; /* Ensure it appears above other elements */
+}
+.dropdown a {
+    color: white; /* Dropdown text color */
+    padding: 10px 20px; /* Padding for links */
+    text-decoration: none; /* Remove underline */
+    display: block; /* Make links block-level */
+}
+.dropdown a:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+#chartsContainer {
+    display: flex;
+    flex-direction: column; /* Stack charts vertically */
+    align-items: center; /* Center align charts */
+    margin: 20px; /* Add margin */
+}
+.chart-canvas {
+    display: none; /* Hide all canvases by default */
+    margin-top: 20px; /* Spacing above the chart */
+    max-width: 1000px;
+    max-height: 700px; /* Set max width for charts */
+    width: 100%; /* Full width of the container */
+}
+#infoText {
+    margin: 20px; /* Add margin */
+    text-align: center; /* Center the text */
+    color: #333; /* Text color */
+    font-size: 14px; /* Adjust font size smaller */
+    max-width: 600px; /* Set a maximum width */
+    margin-left: auto; /* Center the paragraph */
+    margin-right: auto; /* Center the paragraph */
+}
+footer {
+    width: 100%; /* Full width */
+    position: relative; /* Position relative for footer elements */
+}
+.footer-blue {
+    background-color: #007BFF; /* Blue footer bar */
+    padding: 20px 0; /* Padding for top and bottom */
+    text-align: center; /* Center content */
+}
+.footer-black {
+    background-color: black; /* Black footer bar */
+    padding: 10px 0; /* Padding for top and bottom */
+    text-align: center; /* Center content */
+    color: white; /* White text */
+}
+.twitter-button {
+    width: 40px; /* Size for the Twitter button */
+    height: 30px; /* Size for the Twitter button */
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Logo_of_Twitter.svg/512px-Logo_of_Twitter.svg.png?20220821125553'); /* Twitter logo URL */
+    background-size: cover; /* Cover the button */
+    display: inline-block; /* Inline block for centering */
+    margin: 0 auto; /* Center it horizontally */
+    cursor: pointer; /* Pointer cursor on hover */
+}
