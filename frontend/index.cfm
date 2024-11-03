@@ -29,10 +29,18 @@
             <img src="./images/heroPicture.webp" alt="hero image" />
         </div>
 
-        <cfquery name ="ageDimensionData" datasource="rdecapstone">
+        <form id="dimensionForm" method="get">
+            <label for="dimensionType">Choose a Dimension Type:</label>
+            <select name="dimensionType" id="dimensionType" onchange="document.getElementById('dimensionForm').submit();">
+                <option value="Age" <cfif url.dimensionType EQ 'Age'>selected</cfif>>Age</option>
+                <option value="Race and Ethnicity" <cfif url.dimensionType EQ 'Race and Ethnicity'>selected</cfif>>Race and Ethnicity</option>
+            </select>
+        </form>
+
+        <cfquery name="ageDimensionData" datasource="rdecapstone">
             SELECT month, dimension, COUNT(*) AS dimension_count
             FROM stage
-            WHERE dimension_type = 'Age'
+            WHERE dimension_type = <cfqueryparam value="#url.dimensionType#" cfsqltype="CF_SQL_VARCHAR">
             GROUP BY month, dimension
             ORDER BY month, dimension;
         </cfquery>
@@ -41,8 +49,8 @@
             var chartData = [];
             <cfoutput query="ageDimensionData">
                 chartData.push({
-                    month: "#Replace(ageDimensionData.month, '"', '\"', 'ALL')#",   <!-- Ensure month is escaped -->
-                    dimension: "#Replace(ageDimensionData.dimension, '"', '\"', 'ALL')#",  <!-- Ensure dimension is escaped -->
+                    month: "#Replace(ageDimensionData.month, '"', '\"', 'ALL')#",
+                    dimension: "#Replace(ageDimensionData.dimension, '"', '\"', 'ALL')#",
                     dimensionCount: #ageDimensionData.dimension_count#
                 });
             </cfoutput>
@@ -52,15 +60,13 @@
 
             var seriesData = dimensions.map(dimension => {
                 return {
-                    name: dimension, // series name is the dimension
+                    name: dimension,
                     data: months.map(month => {
-                        // Find the count for each month for the current dimension
                         var entry = chartData.find(item => item.month === month && item.dimension === dimension);
-                        return entry ? entry.dimensionCount : 0; // return 0 if no data exists for that month/dimension
+                        return entry ? entry.dimensionCount : 0;
                     })
                 };
             });
-            console.log(chartData)
 
             document.addEventListener('DOMContentLoaded', function () {
                 Highcharts.chart('chart-container', {
@@ -68,7 +74,7 @@
                         type: 'column'
                     },
                     title: {
-                        text: 'Age Dimension Data by Month'
+                        text: 'Vaccination Dimension Data by Month'
                     },
                     xAxis: {
                         categories: months,
@@ -90,6 +96,5 @@
         <div class="container">
             <div id="chart-container" style="height:600px;"></div>
         </div>
-
     </body>
 </html>
