@@ -4,30 +4,45 @@ body {
 }
 .navbar {
     display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: space-between;
-    background-color: #3A6591;
-    padding: 0 9vw;
+    background-color: #3A6591;;
 }
-
-.navbar img {
+.navbar-all {
+    display: flex;
+    gap: 40vw;
+    align-items: center;
+    background-color: #3A6591;;
+}
+.navbar-all img {
     width: 4rem;
+    display: flex;
+    justify-content: flex-start;
 }
 
-.navbar div {
+.navbar-all div {
     display: flex;
 }
 
-.navbar a {
+.navbar-all a {
     color: #f2f2f2;
     text-align: center;
     padding: 1rem;
     text-decoration: none;
 }
 
-.navbar a:hover {
+.navbar-all a:hover {
     background-color: white;
     color: black;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.nav-links.active {
+    display:block;
 }
 
 .links {
@@ -45,6 +60,12 @@ body {
 
 .links option {
     color: black;
+}
+
+.hamburger p {
+    display: none;
+    cursor: pointer;
+    color: white;
 }
 
 .hero img {
@@ -118,7 +139,7 @@ body {
     width: 100%; 
     height: 400px; 
     margin-top: 12vw;
-    margin-bottom: 12vw;
+    margin-bottom: 20vw;
 }
 
 .heatmapCard { 
@@ -129,6 +150,21 @@ body {
 }
 
 @media (width<=1000px) {
+    .hamburger p {
+        display: block;
+    }
+    .nav-links {
+        background-color: white;
+        z-index: 1;
+        display: none;
+        flex-direction: column;
+    }
+    .nav-links.active {
+        display: flex;
+    }
+    .nav-links a, select {
+        display: none;
+    }
     .heatmapCard {
         flex-direction: column;
     }
@@ -142,6 +178,12 @@ body {
     }
     #map {
         min-height: 400px;
+    }
+    .heatmap {
+        margin-top: 600px;
+        margin-bottom: 20px;
+        flex-direction: column;
+        align-items: center;
     }
 }
 
