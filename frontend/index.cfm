@@ -15,31 +15,52 @@
     <script src="https://unpkg.com/leaflet-choropleth/dist/leaflet-choropleth.js"></script>
 </head>
 <body>
-    <div class="navbar">
-        <img src='./images/RDE-logo.png' alt="rde logo" />
-        <div>
-            <a href="index.cfm">Home</a>
-            <select name="links" class="links" onchange="navigateToPage(this.value);">
-                <option value="" hidden>Vaccination Pages</option>
-                <option value="locations">Location</option>
-                <option value="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</option>
-                <option value="doses">Doses</option>
-                <option value="hospitalizations">Hospitalizations</option>
-            </select>
-        </div>
+    <header>
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="logo"><img src='./images/RDE-logo.png' alt="rde logo" /></div>
+                <ul class="nav-links">
+                    <li><a href="index.cfm">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Vaccine Pages &or;</a>
+                        <div class="dropdown-content">
+                            <a href="#">Location</a>
+                            <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
+                            <a href="#">Doses</a>
+                            <a href="#" id="hospitalization">Hospitalizations</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="hamburger" onclick="toggleMenu()">
+                    <div class="icon"><p>&#9776;</p></div>
+                </div>
+            </div>
+            <div class="mobile-menu">
+                <a href="index.cfm">Home</a>
+                <a href="#">Location</a>
+                <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
+                <a href="#">Doses</a>
+                <a href="#" id="hospitalization">Hospitalizations</a>
+            </div>
+        </nav>
+
         <script>
-            function navigateToPage(page) {
-                window.location.href = page;
-            }
+            function toggleMenu() {
+            const mobileMenu = document.querySelector('.mobile-menu');
+            mobileMenu.classList.toggle('active');
+    }
+
         </script>
-    </div>
+    </header>
+    <main>
+    </main>
 </body>
 <footer>
     <div class="twitterFooter">
         <a href="https://www.x.com/rdesystems"><img src="./images/twitterLogo.png"></a>
     </div>
     <div class="copyrightFooter">
-        <p>Copyright &copy 2024 RDE Systems, LLC. All rights reserved.</p>
+        <p>Copyright &copy; 2024 RDE Systems, LLC. All rights reserved.</p>
     </div>
 </footer>
 </html>
