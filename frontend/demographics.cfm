@@ -26,7 +26,7 @@
                         <div class="dropdown-content">
                             <a href="#">Location</a>
                             <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
-                            <a href="#">Doses</a>
+                            <a href="vaccine.html">Doses</a>
                             <a href="#" id="hospitalization">Hospitalizations</a>
                         </div>
                     </li>
@@ -39,7 +39,7 @@
                 <a href="index.cfm">Home</a>
                 <a href="#">Location</a>
                 <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
-                <a href="#">Doses</a>
+                <a href="vaccine.html">Doses</a>
                 <a href="#" id="hospitalization">Hospitalizations</a>
             </div>
         </nav>
@@ -69,7 +69,7 @@
                         <label for="seasonSurveyYear">Choose a Season Survey Year:</label>
                         <select name="seasonSurveyYear" id="seasonSurveyYear" onchange="document.getElementById('constraintForm').submit();">
                             <option value="All" <cfif url.seasonSurveyYear EQ 'All'>selected</cfif>>All</option>
-                            <cfquery name="yearOptions" datasource="rdecapstone">
+                            <cfquery name="yearOptions" datasource="rde">
                                 SELECT DISTINCT season_survey_year FROM stage ORDER BY season_survey_year;
                             </cfquery>
                             <cfoutput query="yearOptions">
@@ -80,7 +80,7 @@
                         <label for="geographyType">Choose a Geography Type:</label>
                         <select name="geographyType" id="geographyType" onchange="document.getElementById('constraintForm').submit();">
                             <option value="All" <cfif url.geographyType EQ 'All'>selected</cfif>>All</option>
-                            <cfquery name="geoOptions" datasource="rdecapstone">
+                            <cfquery name="geoOptions" datasource="rde">
                                 SELECT DISTINCT geography_type FROM stage ORDER BY geography_type;
                             </cfquery>
                             <cfoutput query="geoOptions">
@@ -90,7 +90,7 @@
                     </form>
                 </div>
 
-                <cfquery name="ageDimensionData" datasource="rdecapstone">
+                <cfquery name="ageDimensionData" datasource="rde">
                     SELECT month, dimension, COUNT(*) AS dimension_count
                     FROM stage
                     WHERE dimension_type = <cfqueryparam value="#url.dimensionType#" cfsqltype="CF_SQL_VARCHAR">
@@ -159,7 +159,7 @@
             </div>
             
             <div class="heatmap">
-                <cfquery name="vaccinationData" datasource="rdecapstone">
+                <cfquery name="vaccinationData" datasource="rde">
                     SELECT fips, count(*) AS fipscount
                     FROM stage
                     GROUP BY fips
