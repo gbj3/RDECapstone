@@ -233,6 +233,29 @@ body {
     max-width: 40%;
 }
 
+#chartsContainer {
+    display: flex;
+    flex-direction: column; /* Stack charts vertically */
+    align-items: center; /* Center align charts */
+    margin: 20px; /* Add margin */
+}
+.chart-canvas {
+    display: none; /* Hide all canvases by default */
+    margin-top: 20px; /* Spacing above the chart */
+    max-width: 1000px;
+    max-height: 700px; /* Set max width for charts */
+    width: 100%; /* Full width of the container */
+}
+#infoText {
+    margin: 20px; /* Add margin */
+    text-align: center; /* Center the text */
+    color: #333; /* Text color */
+    font-size: 14px; /* Adjust font size smaller */
+    max-width: 600px; /* Set a maximum width */
+    margin-left: auto; /* Center the paragraph */
+    margin-right: auto; /* Center the paragraph */
+}
+
 #map {
     border-radius: 25px;
 }
