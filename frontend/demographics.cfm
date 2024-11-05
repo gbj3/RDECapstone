@@ -20,7 +20,7 @@
             <div class="navbar-container">
                 <div class="logo"><img src='./images/RDE-logo.png' alt="rde logo" /></div>
                 <ul class="nav-links">
-                    <li><a href="index.cfm">Home</a></li>
+                    <li><a href="index.html">Home</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropbtn">Vaccine Pages &or;</a>
                         <div class="dropdown-content">
