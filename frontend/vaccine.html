@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cumulative Flu Doses Distributed by Year</title>
+    <link rel="stylesheet" href="./styles/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="logo"><img src='./images/RDE-logo.png' alt="rde logo" /></div>
+                <ul class="nav-links">
+                    <li><a href="index.cfm">Home</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropbtn">Vaccine Pages &or;</a>
+                        <div class="dropdown-content">
+                            <a href="#">Location</a>
+                            <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
+                            <a href="vaccine.html">Doses</a>
+                            <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="hamburger" onclick="toggleMenu()">
+                    <div class="icon"><p>&#9776;</p></div>
+                </div>
+            </div>
+            <div class="mobile-menu">
+                <a href="index.cfm">Home</a>
+                <a href="#">Location</a>
+                <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
+                <a href="#">Doses</a>
+                <a href="#" id="hospitalization">Hospitalizations</a>
+            </div>
+        </nav>
+
+        <script>
+            function toggleMenu() {
+            const mobileMenu = document.querySelector('.mobile-menu');
+            mobileMenu.classList.toggle('active');
+    }
+
+        </script>
+    </header>
+
+    
+
+    <!-- Info paragraph about flu -->
+    <p id="infoText">
+        Flu, also called influenza, is an infection of the nose, throat, and lungs, which are part of the respiratory system. The flu is caused by a virus. Influenza viruses are different from the "stomach flu" viruses that cause diarrhea and vomiting. Most people with the flu get better on their own.
+    </p>
+    <div>
+        <label for="yearSelect">Select Year:</label>
+        <select id="yearSelect" onchange="showGraphForSelectedYear()">
+        </select>
+    </div>
+
+    <div id="chartsContainer"></div>
+
+    <footer>
+        <div class="twitterFooter">
+            <a href="https://www.x.com/rdesystems"><img src="./images/twitterLogo.png"></a>
+        </div>
+        <div class="copyrightFooter">
+            <p>Copyright &copy; 2024 RDE Systems, LLC. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        let allGraphs = {}; // Object to store graphs by year
+
+        async function fetchVaccineData() {
+            try {
+                const response = await fetch('/getVaccineData.cfm');
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                const data = await response.json();
+                console.log("Raw data fetched:", data); // Check the raw data structure
+
+                // Group data by year
+                const groupedData = {};
+                data.forEach(entry => {
+                    const year = entry.year_number;
+                    if (!groupedData[year]) {
+                        groupedData[year] = [];
+                    }
+                    groupedData[year].push(entry);
+                });
+
+                // Populate year dropdown and render a line graph for each year
+                const yearSelect = document.getElementById('yearSelect');
+                for (const year in groupedData) {
+                    yearSelect.innerHTML += `<option value="${year}">${year}</option>`;
+                    allGraphs[year] = renderLineGraph(groupedData[year], year);
+                }
+
+                // Show the 2018 graph by default if it exists
+                showGraphForSelectedYear(2018); // Show only the 2018 graph
+            } catch (error) {
+                console.error('Error fetching vaccine data:', error);
+            }
+        }
+
+        function renderLineGraph(data, year) {
+    const canvas = document.createElement('canvas');
+    canvas.id = `lineChart${year}`;
+    canvas.className = 'chart-canvas'; // Set class for styling
+    document.getElementById('chartsContainer').appendChild(canvas);
+
+    const labels = data.map(entry => `Week: ${entry.week_number}`);
+    const values = data.map(entry => entry.cumulative_flu_doses_distributed);
+
+    const myLineChart = new Chart(canvas.getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: `Flu Doses Distributed (${year})`,
+                data: values,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 1,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // Allow chart to fill its container
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Flu Vaccine Doses Distributed (in millions)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Week'
+                    }
+                }
+            }
+        }
+    });
+
+    return canvas; // Return the created canvas
+}
+
+        function showGraphForSelectedYear() {
+            const selectedYear = document.getElementById('yearSelect').value;
+            const allCanvases = document.querySelectorAll('.chart-canvas');
+
+            // Hide all graphs initially
+            allCanvases.forEach(canvas => {
+                canvas.style.display = 'none';
+            });
+
+            // Show the selected year's graph, default to 2018 if no selection
+            if (selectedYear && allGraphs[selectedYear]) {
+                allGraphs[selectedYear].style.display = 'block';
+            } else if (allGraphs[2018]) {
+                allGraphs[2018].style.display = 'block'; // Show 2018 if no other selection
+            }
+        }
+
+        // Function to toggle the dropdown menu
+        function toggleDropdown() {
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Fetch vaccine data on page load
+        fetchVaccineData();
+
+        // Close dropdown if clicked outside
+        window.onclick = function(event) {
+            if (!event.target.matches('.hamburger')) {
+                const dropdown = document.getElementById('dropdownMenu');
+                if (dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
