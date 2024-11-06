@@ -26,8 +26,8 @@
                         <div class="dropdown-content">
                             <a href="#">Location</a>
                             <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
-                            <a href="#">Doses</a>
-                            <a href="#" id="hospitalization">Hospitalizations</a>
+                            <a href="vaccine.html">Doses</a>
+                            <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
                         </div>
                     </li>
                 </ul>
