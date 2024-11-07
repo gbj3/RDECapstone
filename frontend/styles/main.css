@@ -266,3 +266,62 @@ body {
     align-items: center;
     justify-content: center;
 }
+
+.landingPage {
+    padding: 2rem 0;
+    background-color: #a6c9ec;
+    text-align: center;
+}
+
+.landingText {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:40%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.pageCards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 800px;
+}
+
+.card {
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.cardPill a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+.cardPill a:hover {
+    background-color: white;
+    border: solid 1px #007bff;
+    color: #007bff;
+}

@@ -20,14 +20,14 @@
             <div class="navbar-container">
                 <div class="logo"><img src='./images/RDE-logo.png' alt="rde logo" /></div>
                 <ul class="nav-links">
-                    <li><a href="index.cfm">Home</a></li>
+                    <li><a href="index.html">Home</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropbtn">Vaccine Pages &or;</a>
                         <div class="dropdown-content">
-                            <a href="#">Location</a>
+                            <a href="location.html">Location</a>
                             <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
-                            <a href="#">Doses</a>
-                            <a href="#" id="hospitalization">Hospitalizations</a>
+                            <a href="vaccine.html">Doses</a>
+                            <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
                         </div>
                     </li>
                 </ul>
@@ -36,11 +36,11 @@
                 </div>
             </div>
             <div class="mobile-menu">
-                <a href="index.cfm">Home</a>
-                <a href="#">Location</a>
+                <a href="index.html">Home</a>
+                <a href="location.html">Location</a>
                 <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
-                <a href="#">Doses</a>
-                <a href="#" id="hospitalization">Hospitalizations</a>
+                <a href="vaccine.html">Doses</a>
+                <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
             </div>
         </nav>
 
