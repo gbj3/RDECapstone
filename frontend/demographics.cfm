@@ -22,7 +22,7 @@
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
                     <li class="dropdown">
-                        <a href="#" class="dropbtn">Vaccine Pages &or;</a>
+                        <a href="#" class="dropbtn">Vaccine Pages &#9660;</a>
                         <div class="dropdown-content">
                             <a href="#">Location</a>
                             <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
