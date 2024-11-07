@@ -25,7 +25,7 @@
                     <li class="dropdown">
                         <a href="#" class="dropbtn">Vaccine Pages &#9660;</a>
                         <div class="dropdown-content">
-                            <a href="#">Location</a>
+                            <a href="location.html">Location</a>
                             <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
                             <a href="vaccine.html">Doses</a>
                             <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
@@ -38,7 +38,7 @@
             </div>
             <div class="mobile-menu">
                 <a href="index.html">Home</a>
-                <a href="#">Location</a>
+                <a href="location.html">Location</a>
                 <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
                 <a href="vaccine.html">Doses</a>
                 <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
