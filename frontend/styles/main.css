@@ -56,6 +56,26 @@ body {
     border: solid black 1px;
 }
 
+.nav-links .dropdown:hover #dropdown {
+    display: none;
+}
+
+.nav-links .dropdown:hover #dropup {
+    display: inline;
+}
+
+.dropbtn:hover #dropdown {
+    display: none;
+}
+
+.dropbtn #dropup {
+    display: none;
+}
+
+.dropbtn:hover #dropup {
+    display:inline;
+}
+
 .nav-links li:hover > a {
     background-color: white;
     opacity: 80%;
@@ -324,4 +344,5 @@ body {
     background-color: white;
     border: solid 1px #007bff;
     color: #007bff;
+    scale: 1.1;
 }

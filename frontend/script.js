@@ -30,7 +30,7 @@ function getUserLocation() {
 
 // Function to fetch and load locations based on the search input
 async function loadLocations(searchTerm = "") {
-  const url = `localhost/RDE/getLocationData.cfm?searchTerm=${encodeURIComponent(searchTerm)}`;
+  const url = `/RDE/getLocationData.cfm?searchTerm=${encodeURIComponent(searchTerm)}`;
 
 
   const userLocation = await getUserLocation();

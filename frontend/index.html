@@ -13,11 +13,11 @@
     <header>
         <nav class="navbar">
             <div class="navbar-container">
-                <div class="logo"><img src='./images/RDE-logo.png' alt="rde logo" /></div>
+                <div class="logo"><a href="index.html"><img src='./images/RDE-logo.png' alt="rde logo" /></a></div>
                 <ul class="nav-links">
                     <li><a href="index.html">Home</a></li>
                     <li class="dropdown">
-                        <a href="#" class="dropbtn">Vaccine Pages &#9660;</a>
+                        <a href="#" class="dropbtn">Vaccine Pages <span id="dropdown">&#9660;</span><span id="dropup">&#9650;</span></a>
                         <div class="dropdown-content">
                             <a href="location.html">Location</a>
                             <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
@@ -74,13 +74,15 @@
         <div class="pageCards">
             <div class="card">
                 <h1>View Vaccination Locations</h1>
+                <img src="images/map.png" alt="Map.png" class="cardimg" />
                 <p>Find vaccination locations in your area, along with business hours and more.</p>
                 <div class="cardPill">
-                    <a href="#">Locations</a>
+                    <a href="location.html">Locations</a>
                 </div>
             </div>
             <div class="card">
                 <h1>View Demographics</h1>
+                <img src="images/demographics.png" alt="Demographics.png" class="cardimg" />
                 <p>See the demographics of vaccination recipients, along with a heatmap of the United States.</p>
                 <div class="cardPill">
                     <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
@@ -88,6 +90,7 @@
             </div>
             <div class="card">
                 <h1>View Dosages</h1>
+                <img src="images/dosage.webp" alt="Dosage.webp" class="cardimg" />
                 <p>Learn about the dosages each week with the flu vaccination.</p>
                 <div class="cardPill">
                     <a href="#">Dosages</a>
@@ -95,6 +98,7 @@
             </div>
             <div class="card">
                 <h1>View Hospitalization Rates</h1>
+                <img src="images/hospitalization.webp" alt="Hospitalization.png" class="cardimg" />
                 <p>See visualizations regarding the hospitalization rates related to influenza.</p>
                 <div class="cardPill">
                     <a href="#">Hospitalizations</a>
