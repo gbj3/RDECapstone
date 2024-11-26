@@ -56,6 +56,7 @@
         <div class="hero">
             <img src="./images/heroPicture.webp" alt="hero image" />
         </div>
+        <!-- Dropdown filters for Bar Chart !-->
         <div class="charts">
             <div class="barChartCard">
                 <div class="queryForms">
@@ -65,7 +66,7 @@
                             <option value="Age" <cfif url.dimensionType EQ 'Age'>selected</cfif>>Age</option>
                             <option value="Race and Ethnicity" <cfif url.dimensionType EQ 'Race and Ethnicity'>selected</cfif>>Race and Ethnicity</option>
                         </select>
-                
+                        
                         <label for="seasonSurveyYear">Choose a Season Survey Year:</label>
                         <select name="seasonSurveyYear" id="seasonSurveyYear" onchange="document.getElementById('constraintForm').submit();">
                             <option value="All" <cfif url.seasonSurveyYear EQ 'All'>selected</cfif>>All</option>
@@ -89,7 +90,7 @@
                         </select>
                     </form>
                 </div>
-
+                <!-- Query for Bar Chart !-->
                 <cfquery name="ageDimensionData" datasource="rdecapstone">
                     SELECT month, dimension, COUNT(*) AS dimension_count
                     FROM stage
@@ -103,7 +104,7 @@
                     GROUP BY month, dimension
                     ORDER BY month, dimension;
                 </cfquery>
-
+                <!-- Convert output to json to be rendered !-->
                 <script type="text/javascript">
                     var chartData = [];
                     <cfoutput query="ageDimensionData">
@@ -126,7 +127,7 @@
                             })
                         };
                     });
-
+                    // Chart Style
                     document.addEventListener('DOMContentLoaded', function () {
                         Highcharts.chart('chart-container', {
                             chart: {
@@ -152,19 +153,19 @@
                         });
                     });
                 </script>
-
+                <!-- Bar Chart Container !-->
                 <div class="container">
                     <div id="chart-container" style="width:100%; height:600px"></div>
                 </div>
             </div>
-            
+            <!-- Heatmap Query !-->
             <div class="heatmap">
                 <cfquery name="vaccinationData" datasource="rdecapstone">
                     SELECT fips, count(*) AS fipscount
                     FROM stage
                     GROUP BY fips
                 </cfquery>
-            
+                <!-- Convert to json !-->
                 <cfset vaccinationArray = []>
             
                 <cfloop query="vaccinationData">
@@ -175,7 +176,7 @@
                 </cfloop>
             
                 <cfset vaccinationJSON = serializeJSON(vaccinationArray)>
-
+                <!-- Text next to heatmap !-->
                 <div class="heatmapCard">
                     <div class="textContainer">
                         <h1>Influenza Vaccination Heat Map</h1>
@@ -183,7 +184,7 @@
                     </div>
                     <div id="map" style="height: 600px; width: 100%;"></div>
                 </div>
-            
+                
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
                         // Initialize the map after the DOM is fully loaded
