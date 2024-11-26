@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flu Vaccination Locations</title>
-  <link rel="stylesheet" href="/CapstoneProject/RDECapstone/frontend/styles/style.css">
+  <link rel="stylesheet" href="./styles/style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -12,11 +12,11 @@
   <header>
     <nav class="navbar">
       <div class="navbar-container">
-        <div class="logo"><img src="/CapstoneProject/RDECapstone/frontend/images/RDE-logo.png" alt="RDE Logo"></div>
+        <div class="logo"><img src="./images/RDE-logo.png" alt="RDE Logo"></div>
         <ul class="nav-links">
           <li><a href="index.html">Home</a></li>
           <li class="dropdown">
-            <a href="#" class="dropbtn">Vaccine Pages &or;</a>
+            <a href="#" class="dropbtn">Vaccine Pages &#9660;</a>
             <div class="dropdown-content">
               <a href="location.html">Location</a>
               <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
@@ -40,39 +40,33 @@
   </header>
 
   <div class="container">
+    <div id="map"></div>
     <div class="sidebar">
       <!-- Search Bar with Distance Filter -->
       <div id="search-container">
         <input type="text" id="location-search" placeholder="Search for locations">
-        <input type="number" id="distance-filter" placeholder="Distance (miles)" min="1">
+        <input type="number" id="distance-filter" placeholder="Filter location distance (miles)" min="1">
         <button onclick="searchLocation()">Search</button>
       </div>
 
       <div id="location-list">
         <!-- Locations will be dynamically added here -->
       </div>
-
-      <!-- "Show More" button to display additional results -->
-      <button id="show-more-btn" onclick="showMoreLocations()" style="display: none;">
-        Show More
-      </button>
     </div>
-    <div id="map"></div>
   </div>
 
   <!-- Footer Section -->
   <footer>
     <div class="twitterFooter">
-      <a href="https://www.x.com/rdesystems"><img src="/CapstoneProject/RDECapstone/frontend/images/twitterLogo.png" alt="Twitter Logo"></a>
+      <a href="https://www.x.com/rdesystems"><img src="./images/twitterLogo.png" alt="Twitter Logo"></a>
     </div>
     <div class="copyrightFooter">
       <p>&copy; 2024 RDE Systems, LLC. All rights reserved.</p>
     </div>
   </footer>
 
-  <script src="/CapstoneProject/RDECapstone/frontend/script.js"></script>
+  <script src="script.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBNA9OPKN3QfKRmnEoWKduVwP6eMKjO8iQ&callback=initMap" async defer></script>
-
   <script>
     function toggleMenu() {
       const mobileMenu = document.querySelector('.mobile-menu');
