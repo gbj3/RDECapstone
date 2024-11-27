@@ -92,8 +92,8 @@
                 </div>
                 <!-- Query for Bar Chart !-->
                 <cfquery name="ageDimensionData" datasource="rdecapstone">
-                    SELECT month, dimension, COUNT(*) AS dimension_count
-                    FROM stage
+                    SELECT month, dimension, SUM(sample_size) AS dimension_count
+                    FROM demographics_all
                     WHERE dimension_type = <cfqueryparam value="#url.dimensionType#" cfsqltype="CF_SQL_VARCHAR">
                     <cfif url.seasonSurveyYear NEQ "All">
                         AND season_survey_year = <cfqueryparam value="#url.seasonSurveyYear#" cfsqltype="CF_SQL_VARCHAR">
@@ -161,8 +161,9 @@
             <!-- Heatmap Query !-->
             <div class="heatmap">
                 <cfquery name="vaccinationData" datasource="rdecapstone">
-                    SELECT fips, count(*) AS fipscount
-                    FROM stage
+                    SELECT fips, SUM(sample_size) AS fipscount
+                    FROM demographics_all
+                    WHERE geography_type = 'States/Local Areas'
                     GROUP BY fips
                 </cfquery>
                 <!-- Convert to json !-->
@@ -191,30 +192,32 @@
                         var map = L.map('map').setView([37.8, -96], 4); // Center of the US
             
                         var vaccinationData = <cfoutput>#vaccinationJSON#</cfoutput>;
-            
+                        //console.log(vaccinationData);
                         // Fetch the GeoJSON data for US boundaries
-                        fetch('./geojson-counties-fips.json')
+                        fetch('./us-states.json')
                             .then(response => response.json())
                             .then(geojsonData => {
-                                fetch('./geojson-counties-fips.json')
+                                fetch('./us-states.json')
                                     .then(response => response.json())
                                     .then(fipsData => {
             
                                         function getColor(count) {
-                                            return count > 6 ? '#000000' :
-                                                count > 5  ? '#885602' :
-                                                count > 4  ? '#800026' :
-                                                count > 3   ? '#BD0026' :
-                                                count > 2   ? '#FD8D3C' :
-                                                count > 1   ? '#FED976' :
+                                            return count > 10000000 ? '#900000' :
+                                                count > 8000000  ? '#ee2400' :
+                                                count > 6000000  ? '#ffb09c' :
+                                                count > 4000000   ? '#fbd9d3' :
+                                                count > 2000000   ? '#ffefea' :
                                                                 '#FFFFFF';
                                         }
             
                                         // Style function to apply to each region based on the vaccination count
                                         function style(feature) {
-                                            var fips = feature.properties.STATE + feature.properties.COUNTY;
+                                            var fips = feature.id;
+                                            //console.log(feature.id);
                                             var vaccination = vaccinationData.find(v => v.fips == fips);
                                             var count = vaccination ? vaccination.count : 0;
+                                            console.log(vaccination);
+                                            
             
                                             return {
                                                 fillColor: getColor(count),
