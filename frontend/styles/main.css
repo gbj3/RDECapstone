@@ -2,6 +2,9 @@ body {
     font-family: 'Lato', 'Arial';
     margin: 0;
 }
+main {
+    height: fit-content;
+}
 .navbar {
     background-color: #3A6591;
 }
@@ -193,7 +196,7 @@ body {
     height: 100%;
 }
 
-@media (width<=800px) {
+@media (max-width:800px) {
     .queryForms form {
         flex-direction: column;
         gap: 0; 
@@ -222,26 +225,27 @@ body {
     width: 100%; 
 }
 
-@media (width<=1000px) {
+@media (max-width:1000px) {
     .heatmapCard {
         flex-direction: column;
+        margin-top: 400px;
+        justify-content: center;
+        align-items: center;
     }
     .textContainer {
+        display: block;
+        margin: 0;
         width: 100%;
-        max-width: none;
+        max-width: 100% !important;
     }
     .textContainer h1, p {
-        width: 100%;
         text-align: center;
     }
     #map {
         min-height: 400px;
     }
-    .heatmap {
-        margin-top: 600px;
-        margin-bottom: 20px;
-        flex-direction: column;
-        align-items: center;
+    .demographicsFooter {
+        margin-top: 500px;
     }
 }
 
@@ -251,6 +255,23 @@ body {
     justify-content: center;
     text-align: left; 
     max-width: 40%;
+}
+
+.heatmapForms {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.heatmapForms label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.heatmapForms select {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
 }
 
 #map {

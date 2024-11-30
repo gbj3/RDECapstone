@@ -26,7 +26,7 @@
                         <a href="#" class="dropbtn">Vaccine Pages <span id="dropdown">&#9660;</span><span id="dropup">&#9650;</span></a>
                         <div class="dropdown-content">
                             <a href="location.html">Location</a>
-                            <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
+                            <a href="http://localhost/RDE/demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All&month=All&season_survey_year=All">Demographics</a>
                             <a href="vaccine.html">Doses</a>
                             <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
                         </div>
@@ -39,7 +39,7 @@
             <div class="mobile-menu">
                 <a href="index.html">Home</a>
                 <a href="location.html">Location</a>
-                <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
+                <a href="http://localhost/RDE/demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All&month=All&season_survey_year=All">Demographics</a>
                 <a href="vaccine.html">Doses</a>
                 <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
             </div>

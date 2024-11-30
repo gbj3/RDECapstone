@@ -25,7 +25,7 @@
                         <a href="#" class="dropbtn">Vaccine Pages <span id="dropdown">&#9660;</span><span id="dropup">&#9650;</span></a>
                         <div class="dropdown-content">
                             <a href="location.html">Location</a>
-                            <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
+                            <a href="http://localhost/RDE/demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All&month=All&season_survey_year=All">Demographics</a>
                             <a href="vaccine.html">Doses</a>
                             <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
                         </div>
@@ -36,9 +36,9 @@
                 </div>
             </div>
             <div class="mobile-menu">
-                <a href="index.cfm">Home</a>
+                <a href="index.html">Home</a>
                 <a href="location.html">Location</a>
-                <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
+                <a href="http://localhost/RDE/demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All&month=All&season_survey_year=All">Demographics</a>
                 <a href="vaccine.html">Doses</a>
                 <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
             </div>
@@ -62,13 +62,13 @@
                 <div class="queryForms">
                     <form id="constraintForm" method="get">
                         <label for="dimensionType">Choose a Dimension Type:</label>
-                        <select name="dimensionType" id="dimensionType" onchange="document.getElementById('constraintForm').submit();">
+                        <select name="dimensionType" id="dimensionType" onchange="applyFilter();">
                             <option value="Age" <cfif url.dimensionType EQ 'Age'>selected</cfif>>Age</option>
                             <option value="Race and Ethnicity" <cfif url.dimensionType EQ 'Race and Ethnicity'>selected</cfif>>Race and Ethnicity</option>
                         </select>
                         
                         <label for="seasonSurveyYear">Choose a Season Survey Year:</label>
-                        <select name="seasonSurveyYear" id="seasonSurveyYear" onchange="document.getElementById('constraintForm').submit();">
+                        <select name="seasonSurveyYear" id="seasonSurveyYear" onchange="applyFilter();">
                             <option value="All" <cfif url.seasonSurveyYear EQ 'All'>selected</cfif>>All</option>
                             <cfquery name="yearOptions" datasource="rdecapstone">
                                 SELECT DISTINCT season_survey_year FROM stage ORDER BY season_survey_year;
@@ -79,7 +79,7 @@
                         </select>
 
                         <label for="geographyType">Choose a Geography Type:</label>
-                        <select name="geographyType" id="geographyType" onchange="document.getElementById('constraintForm').submit();">
+                        <select name="geographyType" id="geographyType" onchange="applyFilter();">
                             <option value="All" <cfif url.geographyType EQ 'All'>selected</cfif>>All</option>
                             <cfquery name="geoOptions" datasource="rdecapstone">
                                 SELECT DISTINCT geography_type FROM stage ORDER BY geography_type;
@@ -135,7 +135,7 @@
                                 backgroundColor: '#D9D9D9'
                             },
                             title: {
-                                text:"Influenza Vaccination Bar Graph"
+                                text:"Influenza Vaccination Bar Chart"
                             },
                             xAxis: {
                                 categories: months,
@@ -164,6 +164,9 @@
                     SELECT fips, SUM(sample_size) AS fipscount
                     FROM demographics_all
                     WHERE geography_type = 'States/Local Areas'
+                    <cfif IsDefined("url.month") AND url.month NEQ "All">
+                        AND month = <cfqueryparam value="#url.month#" cfsqltype="CF_SQL_VARCHAR">
+                    </cfif>
                     GROUP BY fips
                 </cfquery>
                 <!-- Convert to json !-->
@@ -181,7 +184,62 @@
                 <div class="heatmapCard">
                     <div class="textContainer">
                         <h1>Influenza Vaccination Heat Map</h1>
-                        <p>Track flu vaccination rates across the United States</p>
+                        <p>Track flu vaccine rates across the United States</p>
+
+                        <!-- Form to query year and month !-->
+                        <div class="heatmapForms">
+                            <form id="monthForm" method="get">
+                                <label for="month">Choose a Month:</label>
+                                <select name="month" id="month" onchange="applyFilter();">
+                                    <option value="All" <cfif url.month EQ 'All' OR NOT IsDefined("url.month")>selected</cfif>>All</option>
+                                    <cfquery name="monthOptions" datasource="rdecapstone">
+                                        SELECT DISTINCT month FROM demographics_all ORDER BY month;
+                                    </cfquery>
+                                    <cfoutput query="monthOptions">
+                                        <option value="#month#" <cfif url.month EQ month>selected</cfif>>#month#</option>
+                                    </cfoutput>
+                                </select>
+                                <label for="season_survey_year">Choose a Year:</label>
+                                <select name="season_survey_year" id="season_survey_year" onchange="applyFilter();">
+                                    <option value="All" <cfif url.month EQ 'All' OR NOT IsDefined("url.season_survey_year")>selected</cfif>>All</option>
+                                    <cfquery name="season_survey_yearOptions" datasource="rdecapstone">
+                                        SELECT DISTINCT season_survey_year FROM demographics_all ORDER BY season_survey_year;
+                                    </cfquery>
+                                    <cfoutput query="season_survey_yearOptions">
+                                        <option value="#season_survey_year#" <cfif url.season_survey_year EQ season_survey_year>selected</cfif>>#season_survey_year#</option>
+                                    </cfoutput>
+                                </select>
+                            </form>
+                            
+                            <!-- Logic to preserve parameters inside URL !-->
+                            <script>
+                                function applyFilter() {
+                                    // Bar Chart
+                                    const selectedDimension = document.getElementById('dimensionType').value;
+                                    const selectedSurveyYear = document.getElementById('seasonSurveyYear').value;
+                                    const selectedGeographyType = document.getElementById('geographyType').value;
+
+                                    // Heat Map
+                                    const selectedMonth = document.getElementById('month').value;
+                                    const selectedYear = document.getElementById('season_survey_year').value;
+
+                                    const urlParams = new URLSearchParams(window.location.search);
+                    
+                                    // Preserve existing query parameters from constraintForm
+                                    // Bar Chart
+                                    urlParams.set('dimensionType', selectedDimension);
+                                    urlParams.set('seasonSurveyYear', selectedSurveyYear);
+                                    urlParams.set('geographyType', selectedGeographyType);
+                                    
+                                    // Heat Map
+                                    urlParams.set('month', selectedMonth);
+                                    urlParams.set('season_survey_year', selectedYear);
+                    
+                                    // Redirect with updated query string
+                                    window.location.search = urlParams.toString();
+                                }
+                            </script>
+                        </div>
                     </div>
                     <div id="map" style="height: 600px; width: 100%;"></div>
                 </div>
@@ -202,12 +260,31 @@
                                     .then(fipsData => {
             
                                         function getColor(count) {
-                                            return count > 10000000 ? '#900000' :
-                                                count > 8000000  ? '#ee2400' :
-                                                count > 6000000  ? '#ffb09c' :
-                                                count > 4000000   ? '#fbd9d3' :
-                                                count > 2000000   ? '#ffefea' :
-                                                                '#FFFFFF';
+                                            return count > 15000000 ? '#900000' :
+                                                count > 14000000  ? '#aa0000' :
+                                                count > 13000000  ? '#cc0000' :
+                                                count > 12000000  ? '#ee0000' :
+                                                count > 11000000  ? '#ff2400' :
+                                                count > 10000000  ? '#ff3300' :
+                                                count > 9500000  ? '#ff4000' :
+                                                count > 9000000  ? '#ff4d00' :
+                                                count > 8500000  ? '#ff5a00' :
+                                                count > 8000000  ? '#ff6600' :
+                                                count > 7500000  ? '#ff7300' :
+                                                count > 7000000  ? '#ff8000' :
+                                                count > 6500000  ? '#ff8d1a' :
+                                                count > 6000000  ? '#ff9933' :
+                                                count > 5500000  ? '#ffa64d' :
+                                                count > 5000000   ? '#ffb366' :
+                                                count > 4500000   ? '#ffbf80' :
+                                                count > 4000000   ? '#ffc999' :
+                                                count > 3500000   ? '#ffd4b3' :
+                                                count > 3000000   ? '#ffdfcc' :
+                                                count > 2500000   ? '#ffe9e6' :
+                                                count > 2000000   ? '#fff3f0' :
+                                                count > 1500000   ? '#fff8f5' :
+                                                count > 1000000   ? '#fffaf7' :
+                                                                    '#FFFFFF';
                                         }
             
                                         // Style function to apply to each region based on the vaccination count
@@ -240,13 +317,13 @@
             </div>
         </div>
     </main>
+    <footer class="demographicsFooter">
+        <div class="twitterFooter">
+            <a href="https://www.x.com/rdesystems"><img src="./images/twitterLogo.png"></a>
+        </div>
+        <div class="copyrightFooter">
+            <p>Copyright &copy; 2024 RDE Systems, LLC. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
-<footer>
-    <div class="twitterFooter">
-        <a href="https://www.x.com/rdesystems"><img src="./images/twitterLogo.png"></a>
-    </div>
-    <div class="copyrightFooter">
-        <p>Copyright &copy; 2024 RDE Systems, LLC. All rights reserved.</p>
-    </div>
-</footer>
 </html>
