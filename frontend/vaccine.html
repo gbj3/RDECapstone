@@ -11,14 +11,14 @@
     <header>
         <nav class="navbar">
             <div class="navbar-container">
-                <div class="logo"><a href="index.html"><img src='./images/RDE-logo.png' alt="rde logo" /></a></div>
+                <div class="logo"><img src='./images/RDE-logo.png' alt="rde logo" /></div>
                 <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
+                    <li><a href="index.cfm">Home</a></li>
                     <li class="dropdown">
-                        <a href="#" class="dropbtn">Vaccine Pages <span id="dropdown">&#9660;</span><span id="dropup">&#9650;</span></a>
+                        <a href="#" class="dropbtn">Vaccine Pages &#9660;</a>
                         <div class="dropdown-content">
-                            <a href="location.html">Location</a>
-                            <a href="http://localhost/RDE/demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All&month=All&season_survey_year=All">Demographics</a>
+                            <a href="#">Location</a>
+                            <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
                             <a href="vaccine.html">Doses</a>
                             <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
                         </div>
@@ -29,11 +29,11 @@
                 </div>
             </div>
             <div class="mobile-menu">
-                <a href="index.html">Home</a>
-                <a href="location.html">Location</a>
-                <a href="http://localhost/RDE/demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All&month=All&season_survey_year=All">Demographics</a>
-                <a href="vaccine.html">Doses</a>
-                <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
+                <a href="index.cfm">Home</a>
+                <a href="#">Location</a>
+                <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All">Demographics</a>
+                <a href="#">Doses</a>
+                <a href="#" id="hospitalization">Hospitalizations</a>
             </div>
         </nav>
 
@@ -47,11 +47,15 @@
     </header>
 
     
-
-    <!-- Info paragraph about flu -->
+    <h3 style="text-align:center;">About the Flu</h3>
     <p id="infoText">
         Flu, also called influenza, is an infection of the nose, throat, and lungs, which are part of the respiratory system. The flu is caused by a virus. Influenza viruses are different from the "stomach flu" viruses that cause diarrhea and vomiting. Most people with the flu get better on their own.
     </p>
+    <h3 style="text-align:center;">        About this Graph</h3>
+    <p id="infoText">
+        Explore interactive graphs showcasing the weekly distribution of flu vaccine doses for each year, based on data provided by the CDC. These visualizations highlight trends in vaccine distribution, enabling users to identify patterns, compare annual variations, and gain insights into how flu vaccination efforts evolve over time. Perfect for researchers, public health officials, and curious individuals looking to understand the dynamics of flu vaccine availability.
+    </p>
+
     <div>
         <label for="yearSelect">Select Year:</label>
         <select id="yearSelect" onchange="showGraphForSelectedYear()">
@@ -70,18 +74,17 @@
     </footer>
 
     <script>
-        let allGraphs = {}; // Object to store graphs by year
+        let allGraphs = {};
 
         async function fetchVaccineData() {
             try {
-                const response = await fetch('./getVaccineData.cfm');
+                const response = await fetch('/getVaccineData.cfm');
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
                 }
                 const data = await response.json();
-                console.log("Raw data fetched:", data); // Check the raw data structure
+                console.log("Raw data fetched:", data);
 
-                // Group data by year
                 const groupedData = {};
                 data.forEach(entry => {
                     const year = entry.year_number;
@@ -91,15 +94,13 @@
                     groupedData[year].push(entry);
                 });
 
-                // Populate year dropdown and render a line graph for each year
                 const yearSelect = document.getElementById('yearSelect');
                 for (const year in groupedData) {
                     yearSelect.innerHTML += `<option value="${year}">${year}</option>`;
                     allGraphs[year] = renderLineGraph(groupedData[year], year);
                 }
 
-                // Show the 2018 graph by default if it exists
-                showGraphForSelectedYear(2018); // Show only the 2018 graph
+                showGraphForSelectedYear(2018);
             } catch (error) {
                 console.error('Error fetching vaccine data:', error);
             }
@@ -108,27 +109,47 @@
         function renderLineGraph(data, year) {
     const canvas = document.createElement('canvas');
     canvas.id = `lineChart${year}`;
-    canvas.className = 'chart-canvas'; // Set class for styling
+    canvas.className = 'chart-canvas';
     document.getElementById('chartsContainer').appendChild(canvas);
 
     const labels = data.map(entry => `Week: ${entry.week_number}`);
     const values = data.map(entry => entry.cumulative_flu_doses_distributed);
+
+    const weekDates = data.map(entry => {
+        const startDate = new Date(entry.start_date);
+        const endDate = new Date(entry.end_date);
+        return `(${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()})`;
+    });
 
     const myLineChart = new Chart(canvas.getContext('2d'), {
         type: 'line',
         data: {
             labels: labels,
             datasets: [{
-                label: `Flu Doses Distributed (${year})`,
+                label: `Flu Vaccine Doses Distributed (${year})`,
                 data: values,
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderWidth: 1,
+                pointRadius: 5,
+                pointHoverRadius: 7,
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false, // Allow chart to fill its container
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const index = context.dataIndex;
+                            const doseCount = context.raw;
+                            const weekDateRange = weekDates[index];
+                            return `Doses: ${doseCount.toFixed(2)}M ${weekDateRange}`;
+                        }
+                    }
+                }
+            },
             scales: {
                 y: {
                     beginAtZero: true,
@@ -147,36 +168,31 @@
         }
     });
 
-    return canvas; // Return the created canvas
+    return canvas;
 }
 
         function showGraphForSelectedYear() {
             const selectedYear = document.getElementById('yearSelect').value;
             const allCanvases = document.querySelectorAll('.chart-canvas');
 
-            // Hide all graphs initially
             allCanvases.forEach(canvas => {
                 canvas.style.display = 'none';
             });
 
-            // Show the selected year's graph, default to 2018 if no selection
             if (selectedYear && allGraphs[selectedYear]) {
                 allGraphs[selectedYear].style.display = 'block';
             } else if (allGraphs[2018]) {
-                allGraphs[2018].style.display = 'block'; // Show 2018 if no other selection
+                allGraphs[2018].style.display = 'block';
             }
         }
 
-        // Function to toggle the dropdown menu
         function toggleDropdown() {
             const dropdownMenu = document.getElementById('dropdownMenu');
             dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
         }
 
-        // Fetch vaccine data on page load
         fetchVaccineData();
 
-        // Close dropdown if clicked outside
         window.onclick = function(event) {
             if (!event.target.matches('.hamburger')) {
                 const dropdown = document.getElementById('dropdownMenu');
