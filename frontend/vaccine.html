@@ -79,7 +79,7 @@
 
         async function fetchVaccineData() {
             try {
-                const response = await fetch('/getVaccineData.cfm');
+                const response = await fetch('./getVaccineData.cfm');
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
                 }

@@ -167,6 +167,9 @@
                     <cfif IsDefined("url.month") AND url.month NEQ "All">
                         AND month = <cfqueryparam value="#url.month#" cfsqltype="CF_SQL_VARCHAR">
                     </cfif>
+                    <cfif IsDefined("url.season_survey_year") AND url.season_survey_year NEQ "All">
+                        AND season_survey_year = <cfqueryparam value="#url.season_survey_year#" cfsqltype="CF_SQL_VARCHAR">
+                    </cfif>
                     GROUP BY fips
                 </cfquery>
                 <!-- Convert to json !-->
@@ -308,6 +311,48 @@
             
                                         // Add the GeoJSON data to the map
                                         L.geoJson(geojsonData, { style: style }).addTo(map);
+
+                                        /*Legend specific*/
+                                        var legend = L.control({ position: "bottomleft" });
+
+                                        legend.onAdd = function(map) {
+                                        var div = L.DomUtil.create("div", "legend");
+                                        div.innerHTML += "<h4>Vaccination Count</h4>";
+                                        div.innerHTML += `
+                                            <div style="width: 200px; height: 15px; background: linear-gradient(to right, 
+                                                #FFFFFF, 
+                                                #fffaf7 4%, 
+                                                #fff8f5 8%, 
+                                                #fff3f0 12%, 
+                                                #ffe9e6 16%, 
+                                                #ffdfcc 20%, 
+                                                #ffd4b3 24%, 
+                                                #ffc999 28%, 
+                                                #ffbf80 32%, 
+                                                #ffb366 36%, 
+                                                #ffa64d 40%, 
+                                                #ff9933 44%, 
+                                                #ff8d1a 48%, 
+                                                #ff8000 52%, 
+                                                #ff7300 56%, 
+                                                #ff6600 60%, 
+                                                #ff5a00 64%, 
+                                                #ff4d00 68%, 
+                                                #ff4000 72%, 
+                                                #ff3300 76%, 
+                                                #ff2400 80%, 
+                                                #ee0000 84%, 
+                                                #cc0000 88%, 
+                                                #aa0000 92%, 
+                                                #900000); 
+                                                border: 1px solid black;"></div>
+                                            <div style="display: flex; justify-content: space-between;">
+                                                <span>< 1M</span>
+                                                <span>> 15M</span>
+                                            </div>`;
+                                        return div;
+                                        };
+                                        legend.addTo(map);
                                     })
                                     .catch(error => console.error("Error loading FIPS map data:", error));
                             })
