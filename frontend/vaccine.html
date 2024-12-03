@@ -19,7 +19,7 @@
                         <div class="dropdown-content">
                             <a href="index.html">Home</a>
                             <a href="location.html">Location</a>
-                            <a href="http://localhost/RDE/demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All&month=All&season_survey_year=All">Demographics</a>
+                            <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All&month=All&season_survey_year=All">Demographics</a>
                             <a href="vaccine.html">Doses</a>
                             <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
                         </div>
@@ -32,7 +32,7 @@
             <div class="mobile-menu">
                 <a href="index.html">Home</a>
                 <a href="location.html">Location</a>
-                <a href="http://localhost/RDE/demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All&month=All&season_survey_year=All">Demographics</a>
+                <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All&month=All&season_survey_year=All">Demographics</a>
                 <a href="vaccine.html">Doses</a>
                 <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
             </div>
@@ -79,7 +79,7 @@
 
         async function fetchVaccineData() {
             try {
-                const response = await fetch('./getVaccineData.cfm');
+                const response = await fetch('getVaccineData.cfm');
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
                 }
