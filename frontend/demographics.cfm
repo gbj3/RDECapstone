@@ -248,112 +248,67 @@
                 
                 <script>
                     document.addEventListener('DOMContentLoaded', function () {
-                        // Initialize the map after the DOM is fully loaded
                         var map = L.map('map').setView([37.8, -96], 4); // Center of the US
-            
                         var vaccinationData = <cfoutput>#vaccinationJSON#</cfoutput>;
-                        //console.log(vaccinationData);
+                
+                        // Sort vaccination data by count in descending order to assign rankings
+                        vaccinationData.sort((a, b) => b.count - a.count);                
+                        vaccinationData.forEach((item, index) => {
+                            item.rank = index + 1;
+                        });
+                
+                        var maxRank = vaccinationData.length;
+                        var highestCount = vaccinationData[0].count;
+                        var lowestCount = vaccinationData[vaccinationData.length-1].count;
+                
+                        // Dynamic color calculation based on ranking
+                        function getColor(rank) {
+                            var rankPercentile = rank / maxRank;
+                            return `rgba(255, ${Math.round(255 * rankPercentile)}, ${Math.round(255 * rankPercentile)}, ${1 - rankPercentile * 0.3})`;
+                        }
+                
+                        // Color based on rank
+                        function style(feature) {
+                            var fips = feature.id;
+                            var vaccination = vaccinationData.find(v => v.fips == fips);
+                            var rank = vaccination ? vaccination.rank : maxRank;
+                
+                            return {
+                                fillColor: getColor(rank),
+                                weight: 2,
+                                opacity: 1,
+                                color: 'white',
+                                dashArray: '3',
+                                fillOpacity: 0.7,
+                            };
+                        }
+                
                         // Fetch the GeoJSON data for US boundaries
                         fetch('./us-states.json')
                             .then(response => response.json())
                             .then(geojsonData => {
-                                fetch('./us-states.json')
-                                    .then(response => response.json())
-                                    .then(fipsData => {
-            
-                                        function getColor(count) {
-                                            return count > 15000000 ? '#900000' :
-                                                count > 14000000  ? '#aa0000' :
-                                                count > 13000000  ? '#cc0000' :
-                                                count > 12000000  ? '#ee0000' :
-                                                count > 11000000  ? '#ff2400' :
-                                                count > 10000000  ? '#ff3300' :
-                                                count > 9500000  ? '#ff4000' :
-                                                count > 9000000  ? '#ff4d00' :
-                                                count > 8500000  ? '#ff5a00' :
-                                                count > 8000000  ? '#ff6600' :
-                                                count > 7500000  ? '#ff7300' :
-                                                count > 7000000  ? '#ff8000' :
-                                                count > 6500000  ? '#ff8d1a' :
-                                                count > 6000000  ? '#ff9933' :
-                                                count > 5500000  ? '#ffa64d' :
-                                                count > 5000000   ? '#ffb366' :
-                                                count > 4500000   ? '#ffbf80' :
-                                                count > 4000000   ? '#ffc999' :
-                                                count > 3500000   ? '#ffd4b3' :
-                                                count > 3000000   ? '#ffdfcc' :
-                                                count > 2500000   ? '#ffe9e6' :
-                                                count > 2000000   ? '#fff3f0' :
-                                                count > 1500000   ? '#fff8f5' :
-                                                count > 1000000   ? '#fffaf7' :
-                                                                    '#FFFFFF';
-                                        }
-            
-                                        // Style function to apply to each region based on the vaccination count
-                                        function style(feature) {
-                                            var fips = feature.id;
-                                            //console.log(feature.id);
-                                            var vaccination = vaccinationData.find(v => v.fips == fips);
-                                            var count = vaccination ? vaccination.count : 0;
-                                            console.log(vaccination);
-                                            
-            
-                                            return {
-                                                fillColor: getColor(count),
-                                                weight: 2,
-                                                opacity: 1,
-                                                color: 'white',
-                                                dashArray: '3',
-                                                fillOpacity: 0.7
-                                            };
-                                        }
-            
-                                        // Add the GeoJSON data to the map
-                                        L.geoJson(geojsonData, { style: style }).addTo(map);
-
-                                        /*Legend specific*/
-                                        var legend = L.control({ position: "bottomleft" });
-
-                                        legend.onAdd = function(map) {
-                                        var div = L.DomUtil.create("div", "legend");
-                                        div.innerHTML += "<h4>Vaccination Count</h4>";
-                                        div.innerHTML += `
-                                            <div style="width: 200px; height: 15px; background: linear-gradient(to right, 
-                                                #FFFFFF, 
-                                                #fffaf7 4%, 
-                                                #fff8f5 8%, 
-                                                #fff3f0 12%, 
-                                                #ffe9e6 16%, 
-                                                #ffdfcc 20%, 
-                                                #ffd4b3 24%, 
-                                                #ffc999 28%, 
-                                                #ffbf80 32%, 
-                                                #ffb366 36%, 
-                                                #ffa64d 40%, 
-                                                #ff9933 44%, 
-                                                #ff8d1a 48%, 
-                                                #ff8000 52%, 
-                                                #ff7300 56%, 
-                                                #ff6600 60%, 
-                                                #ff5a00 64%, 
-                                                #ff4d00 68%, 
-                                                #ff4000 72%, 
-                                                #ff3300 76%, 
-                                                #ff2400 80%, 
-                                                #ee0000 84%, 
-                                                #cc0000 88%, 
-                                                #aa0000 92%, 
-                                                #900000); 
-                                                border: 1px solid black;"></div>
-                                            <div style="display: flex; justify-content: space-between;">
-                                                <span>< 1M</span>
-                                                <span>> 15M</span>
-                                            </div>`;
-                                        return div;
-                                        };
-                                        legend.addTo(map);
-                                    })
-                                    .catch(error => console.error("Error loading FIPS map data:", error));
+                                // Add the GeoJSON data to the map
+                                L.geoJson(geojsonData, { style: style }).addTo(map);
+                
+                                var legend = L.control({ position: "bottomleft" });
+                                legend.onAdd = function (map) {
+                                    var div = L.DomUtil.create("div", "legend");
+                                    div.innerHTML += "<h4>Vaccination Rank</h4>";
+                                    div.innerHTML += `
+                                        <div style="width: 200px; height: 15px; background: linear-gradient(to right, 
+                                            rgba(255, ${Math.round(255 * (maxRank / maxRank))}, ${Math.round(255 * (maxRank / maxRank))}, ${1 - (maxRank / maxRank) * 0.3}), 
+                                            rgba(255, ${Math.round(255 * (maxRank * 0.75 / maxRank))}, ${Math.round(255 * (maxRank * 0.75 / maxRank))}, ${1 - (maxRank * 0.75 / maxRank) * 0.3}),
+                                            rgba(255, ${Math.round(255 * (maxRank * 0.5 / maxRank))}, ${Math.round(255 * (maxRank * 0.5 / maxRank))}, ${1 - (maxRank * 0.5 / maxRank) * 0.3}),
+                                            rgba(255, ${Math.round(255 * (maxRank * 0.25 / maxRank))}, ${Math.round(255 * (maxRank * 0.25 / maxRank))}, ${1 - (maxRank * 0.25 / maxRank) * 0.3}),
+                                            rgba(255, 0, 0, 1)); 
+                                            border: 1px solid black;"></div>
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <span>${lowestCount}</span>
+                                            <span>${highestCount}</span>
+                                        </div>`;
+                                    return div;
+                                };
+                                legend.addTo(map);
                             })
                             .catch(error => console.error("Error loading GeoJSON data:", error));
                     });
