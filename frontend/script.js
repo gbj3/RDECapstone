@@ -6,7 +6,7 @@ let markers = [];
 // Initialize the Google Map
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 40.916, lng: -74.17 },
+    center: { lat: 40.916, lng: -74.17 }, // Default coordinates (e.g., New Jersey)
     zoom: 12,
   });
 }
@@ -14,16 +14,43 @@ function initMap() {
 // Function to get the user's location or use the default map center
 function getUserLocation() {
   return new Promise((resolve) => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => resolve({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        }),
-        () => resolve(map.getCenter().toJSON())
-      );
+    const locationAsked = sessionStorage.getItem("locationAsked");
+
+    // Check if user was already asked for location
+    if (locationAsked) {
+      // Try to get the user's location
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => resolve({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          }),
+          () => resolve(map.getCenter().toJSON()) // If denied, fallback to default map center
+        );
+      } else {
+        resolve(map.getCenter().toJSON()); // Geolocation not supported
+      }
+      return;
+    }
+
+    // Ask the user for permission to access their location
+    const askForLocation = confirm("Would you like to share your location for better search results?");
+
+    if (askForLocation) {
+      sessionStorage.setItem("locationAsked", "true"); // Mark as asked
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => resolve({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          }),
+          () => resolve(map.getCenter().toJSON()) // If denied, fallback to default map center
+        );
+      } else {
+        resolve(map.getCenter().toJSON()); // Geolocation not supported
+      }
     } else {
-      resolve(map.getCenter().toJSON());
+      resolve(map.getCenter().toJSON()); // Fallback to default if user refuses
     }
   });
 }
@@ -34,21 +61,38 @@ async function loadLocations(searchTerm = "") {
     return; // Do not fetch or display anything without a search term
   }
 
-  const url = `/RDECapstone/frontend/getLocationData.cfm?searchTerm=${encodedURIComponent(searchTerm)}`;
-  const userLocation = await getUserLocation();
+  const userLocation = await getUserLocation(); // Get user location
   const maxDistance = parseFloat(document.getElementById("distance-filter").value);
+
+  const url = `getLocationData.cfm?searchTerm=${encodeURIComponent(searchTerm)}`;
 
   fetch(url)
     .then((response) => response.json())
     .then((locations) => {
+      // Create a Map to track unique locations
+      const uniqueLocations = new Map();
+
+      // Loop through the fetched locations and use a composite key to identify duplicates
+      locations.forEach(location => {
+        const key = `${location.loc_name}-${location.loc_admin_street1}-${location.loc_admin_city}-${location.loc_admin_state}-${location.loc_admin_zip}`;
+
+        if (!uniqueLocations.has(key)) {
+          uniqueLocations.set(key, location);
+        }
+      });
+
+      // Convert Map back to array
+      const uniqueLocationsArray = Array.from(uniqueLocations.values());
+
+      // Filter based on the max distance if specified
       allLocations = maxDistance
-        ? locations.filter((location) =>
+        ? uniqueLocationsArray.filter((location) =>
             calculateDistanceInMiles(userLocation, {
               lat: parseFloat(location.latitude),
               lng: parseFloat(location.longitude),
             }) <= maxDistance
           )
-        : locations;
+        : uniqueLocationsArray;
 
       displayedCount = 0; // Reset displayed count
       clearExistingLocations();
