@@ -34,7 +34,7 @@ async function loadLocations(searchTerm = "") {
     return; // Do not fetch or display anything without a search term
   }
 
-  const url = `/RDECapstone/frontend/getLocationData.cfm?searchTerm=${encodedURIComponent(searchTerm)}`;
+  const url = `getLocationData.cfm?searchTerm=${encodeURIComponent(searchTerm)}`;
   const userLocation = await getUserLocation();
   const maxDistance = parseFloat(document.getElementById("distance-filter").value);
 

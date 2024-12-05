@@ -45,11 +45,11 @@
             </div>
         </nav>
         <script>
-    function toggleMenu() {
-        const mobileMenu = document.querySelector('.mobile-menu');
-        mobileMenu.classList.toggle('active');
-    }
-</script>
+            function toggleMenu() {
+                const mobileMenu = document.querySelector('.mobile-menu');
+                mobileMenu.classList.toggle('active');
+            }
+        </script>
 
     </header>
 

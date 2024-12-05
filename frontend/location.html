@@ -11,33 +11,40 @@
   <!-- Header Section -->
   <header>
     <nav class="navbar">
-      <div class="navbar-container">
-        <div class="logo"><a href="index.html"><img src='./images/RDE-logo.png' alt="rde logo" /></a></div>
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropbtn">Vaccine Pages <span id="dropdown">&#9660;</span><span id="dropup">&#9650;</span></a>
-                <div class="dropdown-content">
-                <a href="location.html">Location</a>
-                <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All&month=All&season_survey_year=All">Demographics</a>
-                <a href="vaccine.html">Doses</a>
-                <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
+        <div class="navbar-container">
+            <div class="logo"><a href="index.html"><img src='./images/RDE-logo.png' alt="rde logo" /></a></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropbtn">Vaccine Pages <span id="dropdown">&#9660;</span><span id="dropup">&#9650;</span></a>
+                    <div class="dropdown-content">
+                        <a href="location.html">Location</a>
+                        <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All&month=All&season_survey_year=All">Demographics</a>
+                        <a href="vaccine.html">Doses</a>
+                        <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
+                    </div>
+                </li>
+            </ul>
+            <div class="hamburger" onclick="toggleMenu()">
+                <div class="icon"><p>&#9776;</p></div>
             </div>
-          </li>
-        </ul>
-        <div class="hamburger" onclick="toggleMenu()">
-          <div class="icon"><p>&#9776;</p></div>
         </div>
-      </div>
-      <div class="mobile-menu">
-        <a href="index.html">Home</a>
-        <a href="location.html">Location</a>
-        <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All&month=All&season_survey_year=All">Demographics</a>
-        <a href="vaccine.html">Doses</a>
-        <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
-      </div>
+        <div class="mobile-menu">
+            <a href="index.html">Home</a>
+            <a href="location.html">Location</a>
+            <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All&month=All&season_survey_year=All">Demographics</a>
+            <a href="vaccine.html">Doses</a>
+            <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
+        </div>
     </nav>
-  </header>
+
+    <script>
+        function toggleMenu() {
+          const mobileMenu = document.querySelector('.mobile-menu');
+          mobileMenu.classList.toggle('active');
+        }
+    </script>
+</header>
 
   <div class="container">
     <div id="map"></div>
@@ -67,7 +74,6 @@
 
   <script src="script.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBNA9OPKN3QfKRmnEoWKduVwP6eMKjO8iQ&callback=initMap" async defer></script>
-
   <script>
     function toggleMenu() {
       const mobileMenu = document.querySelector('.mobile-menu');
