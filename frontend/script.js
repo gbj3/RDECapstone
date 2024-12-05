@@ -1,13 +1,13 @@
 let map;
 let allLocations = [];
-let displayedCount = 3;  // Number of locations displayed initially
+let displayedCount = 0; // Number of locations already displayed
 let markers = [];
 
 // Initialize the Google Map
 function initMap() {
   map = new google.maps.Map(document.getElementById("map"), {
-    center: { lat: 40.916, lng: -74.17 },  // Default map center (adjust as needed)
-    zoom: 12
+    center: { lat: 40.916, lng: -74.17 },
+    zoom: 12,
   });
 }
 
@@ -16,11 +16,11 @@ function getUserLocation() {
   return new Promise((resolve) => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        position => resolve({
+        (position) => resolve({
           lat: position.coords.latitude,
-          lng: position.coords.longitude
+          lng: position.coords.longitude,
         }),
-        () => resolve(map.getCenter().toJSON())  // Use map center as fallback
+        () => resolve(map.getCenter().toJSON())
       );
     } else {
       resolve(map.getCenter().toJSON());
@@ -30,43 +30,50 @@ function getUserLocation() {
 
 // Function to fetch and load locations based on the search input
 async function loadLocations(searchTerm = "") {
-  const url = `/RDE/getLocationData.cfm?searchTerm=${encodeURIComponent(searchTerm)}`;
+  if (!searchTerm) {
+    return; // Do not fetch or display anything without a search term
+  }
 
-
+  const url = `http://127.0.0.1:8500/CapstoneProject/RDECapstone/frontend/getLocationData.cfm?searchTerm=${encodeURIComponent(searchTerm)}`;
   const userLocation = await getUserLocation();
   const maxDistance = parseFloat(document.getElementById("distance-filter").value);
 
   fetch(url)
-    .then(response => response.json())
-    .then(locations => {
-      allLocations = locations;
-      clearMarkers();
-
-      // Filter locations based on the specified distance, if provided
-      const filteredLocations = maxDistance
-        ? locations.filter(location =>
+    .then((response) => response.json())
+    .then((locations) => {
+      allLocations = maxDistance
+        ? locations.filter((location) =>
             calculateDistanceInMiles(userLocation, {
               lat: parseFloat(location.latitude),
-              lng: parseFloat(location.longitude)
+              lng: parseFloat(location.longitude),
             }) <= maxDistance
           )
         : locations;
 
-      // Display the first few results initially
-      displayLocations(Array.isArray(filteredLocations) ? filteredLocations.slice(0, displayedCount) : []);
-
-      document.getElementById("show-more-btn").style.display =
-        filteredLocations.length > displayedCount ? "block" : "none";
+      displayedCount = 0; // Reset displayed count
+      clearExistingLocations();
+      displayLocations();
     })
-    .catch(error => console.error('Error fetching locations:', error));
+    .catch((error) => console.error("Error fetching locations:", error));
 }
 
-// Display a subset of locations in the UI and add markers to the map
-function displayLocations(locations) {
+// Clear existing locations and markers
+function clearExistingLocations() {
   const locationList = document.getElementById("location-list");
-  locationList.innerHTML = "";
+  locationList.innerHTML = ""; // Clear the list
 
-  locations.forEach(location => {
+  markers.forEach((marker) => marker.setMap(null)); // Remove all markers from the map
+  markers = []; // Reset markers array
+}
+
+// Display a subset of locations and add markers to the map
+function displayLocations() {
+  const locationList = document.getElementById("location-list");
+
+  const locationsToShow = allLocations.slice(displayedCount, displayedCount + 5);
+  displayedCount += locationsToShow.length;
+
+  locationsToShow.forEach((location) => {
     const locationItem = document.createElement("div");
     locationItem.classList.add("location-item");
 
@@ -91,12 +98,9 @@ function displayLocations(locations) {
     locationList.appendChild(locationItem);
 
     const marker = new google.maps.Marker({
-      position: {
-        lat: parseFloat(location.latitude),
-        lng: parseFloat(location.longitude)
-      },
+      position: { lat: parseFloat(location.latitude), lng: parseFloat(location.longitude) },
       map: map,
-      title: location.loc_name
+      title: location.loc_name,
     });
     markers.push(marker);
 
@@ -105,7 +109,7 @@ function displayLocations(locations) {
         <h3>${location.loc_name}</h3>
         <p>Address: ${location.loc_admin_street1}, ${location.loc_admin_city}, ${location.loc_admin_state}, ${location.loc_admin_zip}</p>
         <p>Phone: ${location.loc_phone}</p>
-      `
+      `,
     });
 
     marker.addListener("click", () => {
@@ -114,12 +118,24 @@ function displayLocations(locations) {
   });
 }
 
+// Infinite scrolling implementation
+function setupInfiniteScroll() {
+  window.addEventListener("scroll", () => {
+    if (
+      window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 &&
+      displayedCount < allLocations.length
+    ) {
+      displayLocations();
+    }
+  });
+}
+
 // Function to calculate the distance between two lat/lng points in miles
 function calculateDistanceInMiles(point1, point2) {
   const R = 3958.8; // Radius of the Earth in miles
   const dLat = (point2.lat - point1.lat) * (Math.PI / 180);
   const dLon = (point2.lng - point1.lng) * (Math.PI / 180);
-  const a = 
+  const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos(point1.lat * (Math.PI / 180)) * Math.cos(point2.lat * (Math.PI / 180)) *
     Math.sin(dLon / 2) * Math.sin(dLon / 2);
@@ -127,37 +143,14 @@ function calculateDistanceInMiles(point1, point2) {
   return R * c;
 }
 
-// Function to clear all existing markers from the map
-function clearMarkers() {
-  markers.forEach(marker => marker.setMap(null));
-  markers = [];
-}
-
-// Show more locations when "Show More" button is clicked
-function showMoreLocations() {
-  displayedCount += 3;  // Show 3 more locations
-  displayLocations(allLocations.slice(0, displayedCount));
-
-  if (displayedCount >= allLocations.length) {
-    document.getElementById("show-more-btn").style.display = "none";
-  }
-}
-
-// Handle the search input and load locations
+// Search functionality
 function searchLocation() {
   const searchTerm = document.getElementById("location-search").value;
-  displayedCount = 3;
   loadLocations(searchTerm);
 }
 
-// Toggle dropdown menu visibility for mobile navigation
-function toggleDropdown() {
-  const dropdownMenu = document.getElementById('dropdown-menu');
-  dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
-}
-
-// Load all locations by default when the page loads
-window.onload = function() {
+// On page load
+window.onload = function () {
   initMap();
-  loadLocations();
+  setupInfiniteScroll();
 };

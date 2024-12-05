@@ -40,24 +40,19 @@
   </header>
 
   <div class="container">
+    <div id="map"></div>
     <div class="sidebar">
       <!-- Search Bar with Distance Filter -->
       <div id="search-container">
         <input type="text" id="location-search" placeholder="Search for locations">
-        <input type="number" id="distance-filter" placeholder="Distance (miles)" min="1">
+        <input type="number" id="distance-filter" placeholder="Filter location distance (miles)" min="1">
         <button onclick="searchLocation()">Search</button>
       </div>
 
       <div id="location-list">
         <!-- Locations will be dynamically added here -->
       </div>
-
-      <!-- "Show More" button to display additional results -->
-      <button id="show-more-btn" onclick="showMoreLocations()" style="display: none;">
-        Show More
-      </button>
     </div>
-    <div id="map"></div>
   </div>
 
   <!-- Footer Section -->
