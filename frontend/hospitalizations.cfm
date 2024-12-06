@@ -6,13 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Influenza Hospitalizations</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300;400;700;900&family=Open+Sans:wght@300;400;700&display=swap" rel="stylesheet">
-    <script src="https://code.highcharts.com/highcharts.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-choropleth/dist/leaflet-choropleth.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -26,7 +19,7 @@
                         <a href="#" class="dropbtn">Vaccine Pages <span id="dropdown">&#9660;</span><span id="dropup">&#9650;</span></a>
                         <div class="dropdown-content">
                             <a href="location.html">Location</a>
-                            <a href="http://localhost/RDE/demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All&month=All&season_survey_year=All">Demographics</a>
+                            <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All&month=All&season_survey_year=All">Demographics</a>
                             <a href="vaccine.html">Doses</a>
                             <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
                         </div>
@@ -39,17 +32,17 @@
             <div class="mobile-menu">
                 <a href="index.html">Home</a>
                 <a href="location.html">Location</a>
-                <a href="http://localhost/RDE/demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All&month=All&season_survey_year=All">Demographics</a>
+                <a href="demographics.cfm?dimensionType=Age&seasonSurveyYear=All&geographyType=All&month=All&season_survey_year=All">Demographics</a>
                 <a href="vaccine.html">Doses</a>
                 <a href="hospitalizations.cfm" id="hospitalization">Hospitalizations</a>
             </div>
         </nav>
         <script>
-            function toggleMenu() {
-                const mobileMenu = document.querySelector('.mobile-menu');
-                mobileMenu.classList.toggle('active');
-            }
-        </script>
+    function toggleMenu() {
+        const mobileMenu = document.querySelector('.mobile-menu');
+        mobileMenu.classList.toggle('active');
+    }
+</script>
 
     </header>
 
@@ -185,6 +178,7 @@
                     data: data,
                     options: {
                         responsive: true,
+                        maintainAspectRatio: false, // Allow independent width and height
                         scales: {
                             x: {
                                 title: {
@@ -201,7 +195,7 @@
                                 title: {
                                     display: true,
                                     text: 'Rates per 100,000 population'
-                                }
+                                },
                             }
                         },
                         plugins: {
@@ -221,7 +215,7 @@
 
             <!-- Canvas for the Chart -->
             <div class="chart-container">
-                <canvas id="filteredChart" width="1100" height="650"></canvas>
+                <canvas id="filteredChart"></canvas>
             </div>
 
         </div>
@@ -231,21 +225,19 @@
         const urlParams = new URLSearchParams(window.location.search);
         
         if (!urlParams.has('rateType') || !urlParams.has('viewRatesBy') || !urlParams.has('season')) {
-            // Set default values if parameters are missing
-            document.getElementById('rateTypeCumulative').checked = true; // Cumulative
-            document.getElementById('viewRatesBy').value = 'sex'; // View by Sex
-            document.querySelector('input[name="season"][value="2023-24"]').checked = true; // Season 2023-24
+            // Set default values if parameters are missing in URL when first loaded
+            document.getElementById('rateTypeCumulative').checked = true;
+            document.getElementById('viewRatesBy').value = 'sex';
+            document.querySelector('input[name="season"][value="2023-24"]').checked = true;
         }
     </script>
+    <footer>
+        <div class="twitterFooter">
+            <a href="https://www.x.com/rdesystems"><img src="./images/twitterLogo.png"></a>
+        </div>
+        <div class="copyrightFooter">
+            <p>Copyright &copy; 2024 RDE Systems, LLC. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
-<footer>
-    <div class="twitterFooter">
-        <a href="https://www.x.com/rdesystems" target="_blank" title="RDE Systems Twitter">
-            <img src="./images/twitterLogo.png" alt="Twitter Logo">
-        </a>
-    </div>
-    <div class="copyrightFooter">
-        <p>Copyright &copy; 2024 RDE Systems, LLC. All rights reserved.</p>
-    </div>
-</footer>
 </html>
