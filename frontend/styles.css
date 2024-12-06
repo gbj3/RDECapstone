@@ -1,9 +1,10 @@
 body {
     font-family: 'Lato', 'Arial';
     margin: 0;
-    padding: 0;
 }
-
+main {
+    height: fit-content;
+}
 .navbar {
     background-color: #3A6591;
 }
@@ -29,8 +30,8 @@ body {
 
 .nav-links li {
     position: relative;
-    padding: 0;
     margin: 0;
+    padding: 0;
 }
 
 .nav-links a {
@@ -60,16 +61,6 @@ body {
     border: solid black 1px;
 }
 
-.nav-links li:hover > a {
-    background-color: white;
-    opacity: 80%;
-    color: #3A6591;
-}
-
-.nav-links .dropdown:hover > .dropdown-content {
-    display:block;
-}
-
 .nav-links .dropdown:hover #dropdown {
     display: none;
 }
@@ -88,6 +79,16 @@ body {
 
 .dropbtn:hover #dropup {
     display:inline;
+}
+
+.nav-links li:hover > a {
+    background-color: white;
+    opacity: 80%;
+    color: #3A6591;
+}
+
+.nav-links .dropdown:hover > .dropdown-content {
+    display:block;
 }
 
 .hamburger {
@@ -150,19 +151,40 @@ body {
 
     .sidebar {
         width: 100%;
-        padding: 15px;
         border-right: none;
     }
 
     .content {
         width: 100%;
-        padding: 10px;
     }
 
     .chart-container {
         max-width: 100%;
-        height: 400px;
-        margin: 20px auto;
+        height: auto;
+    }
+}
+
+.charts {
+    width: 80%;
+    margin:auto;
+}
+
+@media (max-width:1000px) {
+    .textContainer {
+        display: block;
+        margin: 0;
+        width: 100%;
+        max-width: 100% !important;
+    }
+    .textContainer h1, p {
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    #filteredChart {
+        height: 540px !important; /* make height taller on mobile view  */
+        width: 100% !important;
     }
 }
 .title-container {
@@ -177,16 +199,25 @@ body {
     margin: 20px 0;
 }
 
-/* Main container for sidebar and content */
+/* Main container for sidebar and content for graph together */
 .container {
     display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
     width: 100%;
+    height: 100%;
     background-color: #f8f8f8;
-    padding: 0;
-    margin: 0;
 }
 
-/* Sidebar styles */
+.textContainer { 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center;
+    text-align: left; 
+    max-width: 40%;
+}
+
 .sidebar {
     width: 250px;
     padding: 20px;
@@ -220,18 +251,20 @@ label {
     margin-top: 5px;
 }
 
-/* Content section */
 .content {
     flex: 1;
     padding: 20px;
 }
 
-/* Chart container */
 .chart-container {
+    display: flex;
     width: 100%;
-    max-width: 900px;
-    height: 650px;
-    margin: 0 auto;
+    height: 550px;
+    max-width: 100%;
+}
+
+canvas {
+    margin-top: 20px;
 }
 
 /* Footer */
@@ -264,3 +297,103 @@ label {
     align-items: center;
     justify-content: center;
 }
+
+body, html { /* New change for extra space horizontally on mobile*/
+    overflow-x: hidden;
+}
+
+.landingPage {
+    padding: 2rem 0;
+    background-color: #a6c9ec;
+    text-align: center;
+}
+
+.landingText {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:40%;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.pageCards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 800px;
+}
+
+.card {
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.cardPill a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+.cardPill a:hover {
+    background-color: white;
+    border: solid 1px #007bff;
+    color: #007bff;
+    scale: 1.1;
+}
+
+.legend {
+    padding: 6px 8px;
+    font: 14px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255, 255, 255, 0.8);
+    /*box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);*/
+    /*border-radius: 5px;*/
+    line-height: 24px;
+    color: #555;
+  }
+  .legend h4 {
+    text-align: center;
+    font-size: 16px;
+    margin: 2px 12px 8px;
+    color: #777;
+  }
+  
+  .legend span {
+    position: relative;
+    bottom: 3px;
+  }
+  
+  .legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin: 0 8px 0 0;
+    opacity: 0.7;
+  }
+  
+  .legend i.icon {
+    background-size: 18px;
+    background-color: rgba(255, 255, 255, 1);
+  }
+  
